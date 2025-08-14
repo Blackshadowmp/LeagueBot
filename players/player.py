@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 import aiohttp
-import asyncio
 from config import RIOT_API_KEY
 
 player_path = "players/players.txt"
