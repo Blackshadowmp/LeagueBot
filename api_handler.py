@@ -27,7 +27,9 @@ async def ping_riot_api(bot):
             else:
                 print(f"Could not find last match for player {player.riot_id}")
         await get_match_details(session, bot)  
-    save_players("players/players.txt", players)
+    if new_games:
+        save_players("players/players.txt", players)
+        clear_games(new_games)
 
 async def get_puuid(session, riot_id):
     try:
@@ -58,7 +60,6 @@ async def get_match_details(session, bot):
                 print(f"[ERROR] Failed to get match details for {match_id} | Status: {resp.status}")
                 print(await resp.text())
             print_new_game(match_id, await resp.json(), bot)
-    clear_games(new_games)
 def clear_games(games):
     games.clear()
 
