@@ -1,5 +1,7 @@
 import aiohttp
+from champion_map import champion_id_map
 fallback_image_url = 'E:/LeagueBot/LeagueBot/Image_library/Missing64x64.jpg'
+
 async def get_latest_patch(session: aiohttp.ClientSession):
     async with session.get("https://ddragon.leagueoflegends.com/api/versions.json") as resp:
         if resp.status != 200:
@@ -8,7 +10,12 @@ async def get_latest_patch(session: aiohttp.ClientSession):
         patch = versions[0]  # latest patch
     return patch
 
-async def get_champion_icon(session: aiohttp.ClientSession, champion_name: str):
+async def get_champion_icon(session: aiohttp.ClientSession, champion_id: int):
+    champion_name = champion_id_map.get(champion_id)
+    if not champion_name:
+        print(f"[ERROR] Unknown champion ID: {champion_id}")
+        return fallback_image_url
+
     patch = await get_latest_patch(session)
     url = f"https://ddragon.leagueoflegends.com/cdn/{patch}/img/champion/{champion_name}.png"
     async with session.get(url) as resp:
