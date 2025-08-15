@@ -9,7 +9,9 @@ class player_detail:
     deaths = None #riot api as deaths
     assists = None #riot api as assists
     gold = None  #riot api as goldEarned
-    def __init__(self, champion_id, position, items, team, summoner_name, cs, kills, deaths, assists, gold):
+    summoner_spell1 = None #riot api as summoner1Id
+    summoner_spell2 = None #riot api as summoner2Id
+    def __init__(self, champion_id, position, items, team, summoner_name, cs, kills, deaths, assists, gold, summoner_spell1, summoner_spell2):
         if position == 'UTILITY':
             position = 'SUPPORT'
         self.champion_id = champion_id
@@ -22,6 +24,9 @@ class player_detail:
         self.deaths = deaths
         self.assists = assists
         self.gold = gold
+        self.summoner_spell1 = summoner_spell1
+        self.summoner_spell2 = summoner_spell2
+
     def get_player(self):
         return {
             "champion_id": self.champion_id,
@@ -33,7 +38,9 @@ class player_detail:
             "kills": self.kills,
             "deaths": self.deaths,
             "assists": self.assists,
-            "gold": self.gold
+            "gold": self.gold,
+            "summoner_spell1": self.summoner_spell1,
+            "summoner_spell2": self.summoner_spell2
         }
     def print(self):
         player_info = self.get_player()

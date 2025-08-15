@@ -29,6 +29,7 @@ def load_players(filename):
     return players
 
 def save_players(filename, players):
+    print(f"Saving {len(players)} players to {filename}")
     with open(filename, "w") as f:
         for player in players.values():
             f.write(f"{player.riot_id} {player.puuid} {player.last_game_id}\n")
@@ -66,14 +67,3 @@ async def fetch_puuid(riot_id: str):
                 return None
             data = await resp.json()
             return data.get("puuid")
-
-# # Example usage:
-# # Access or add a new player
-# puuid = "Steviesaysrawr#na1"
-# add_player(puuid)
-
-# players = load_players(player_path)
-
-# # Update last game ID for a player
-# players[puuid].last_game_id = "1234567890"
-# save_players(player_path, players)
