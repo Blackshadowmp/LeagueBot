@@ -70,7 +70,7 @@ async def send_game_to_discord(channel, blue_team, red_team, match_id, winning_t
     red_file = discord.File(red_image, filename="red_team.png")
     # Embeds
     match= match_id.split("_")[-1]
-    blue_embed = discord.Embed(title="Blue Team Wins" if winning_team == 100 else "Blue Team Lost", color=0x1f8b4c, url=f"https://www.leagueofgraphs.com/match/na/{match}")
+    blue_embed = discord.Embed(title="Blue Team Wins" if winning_team == 100 else "Blue Team Lost", color=0x0000FF, url=f"https://www.leagueofgraphs.com/match/na/{match}")
     blue_embed.set_image(url="attachment://blue_team.png")
 
     red_embed = discord.Embed(title="Red Team Wins" if winning_team == 200 else "Red Team Lost", color=0x992d22)
