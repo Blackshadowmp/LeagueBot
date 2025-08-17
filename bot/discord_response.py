@@ -77,11 +77,18 @@ async def send_game_to_discord(channel, blue_team, red_team, match_id, winning_t
     red_embed = discord.Embed(title="Red Team Wins" if winning_team == 200 else "Red Team Lost", color=0x992d22)
     red_embed.set_image(url="attachment://red_team.png")
     tracked_players = [player.split('#')[0] for player in load_players("players/players.txt")]
-    players_to_print=[]
-    for player in blue_team + red_team: 
+    players_to_print_blue=[]
+    players_to_print_red=[]
+    for player in blue_team: 
         if player.summoner_name.lower() in tracked_players:
-            players_to_print.append(str(player.summoner_name))
+            players_to_print_blue.append(str(player.summoner_name))
+    for player in red_team: 
+        if player.summoner_name.lower() in tracked_players:
+            players_to_print_red.append(str(player.summoner_name))
     # Send both embeds in one message
     #send a message saying who in the tracked list is in the game
-    await channel.send("Players in the game: " + ", ".join(players_to_print))
+    if players_to_print_blue:
+        await channel.send("Players in the game on Blue Team: " + ", ".join(players_to_print_blue))
+    if players_to_print_red:
+        await channel.send("Players in the game on Red Team: " + ", ".join(players_to_print_red))
     await channel.send(files=[blue_file, red_file], embeds=[blue_embed, red_embed])
