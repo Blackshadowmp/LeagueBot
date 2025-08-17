@@ -16,7 +16,11 @@ async def ping_riot_api(bot):
         for player in players.values():
             puuid = player.puuid
             print(f"Checking last match for player: {player.riot_id}")
-            last_match = await get_last_match(session, puuid)
+            try:
+                last_match = await get_last_match(session, puuid)
+            except Exception as e:
+                print(f"[ERROR] Failed to get last match for {player.riot_id} | Error: {e}")
+                continue
             if last_match and last_match != player.last_game_id:
                 print(f"Found new match for player: {player.riot_id}")
                 player.add_last_game_id(last_match)
