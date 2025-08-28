@@ -13,7 +13,7 @@ from Image_library.images import refresh_patch
 async def patch_refresher():
     while True:
         await refresh_patch()
-        await asyncio.sleep(180)  # refresh every 3 minutes
+        await asyncio.sleep(300)  # refresh every 5 minutes
 
 @bot.event
 async def on_ready():

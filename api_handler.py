@@ -1,3 +1,5 @@
+import asyncio
+from time import sleep
 from config import RIOT_API_KEY, DISCORD_CHANNEL_ID
 from players.player import load_players, save_players
 import aiohttp
@@ -62,17 +64,21 @@ async def get_match_details(session, bot):
         async with session.get(url, headers=headers) as resp:
             if resp.status != 200:
                 print(f"[ERROR] Failed to get match details for {match_id} | Status: {resp.status}")
-                print(await resp.text())
             print_new_game(match_id, await resp.json(), bot)
+            await asyncio.sleep(2)
 def clear_games(games):
     games.clear()
 
 def print_new_game(match_id, game_data, bot):
+
     winning_team = None
     info = game_data.get('info', {})
-    for tea in info.get("teams", []):
-        if tea.get("win") == True:
-            winning_team = tea.get("teamId")
+    game_mode = info.get('gameMode')
+    if game_mode == "RUBY" or game_mode == "CHERRY":#Ruby is doom bots, Cherry is Arena
+        return
+    for team_loop in info.get("teams", []):
+        if team_loop.get("win") == True:
+            winning_team = team_loop.get("teamId")
     participants = info.get('participants', [])
     blue_team = team(100, [])
     red_team = team(200, [])
@@ -108,4 +114,6 @@ def print_new_game(match_id, game_data, bot):
         if channel_obj:
             asyncio.create_task(send_game_to_discord(channel_obj, blue_team_players, red_team_players, match_id, winning_team))
         else:
-            print(f"[ERROR] Could not find Discord channel with ID {CHANNEL}")
+            print(f"[ERROR] Could not find Discord channel OBJECT with ID {CHANNEL}")
+    else:
+        print(f"[ERROR] Could not find Discord channel with ID {CHANNEL}")

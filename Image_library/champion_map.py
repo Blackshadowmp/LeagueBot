@@ -83,7 +83,7 @@ champion_id_map = {
     800: "Mel",
     902: "Milio",
     21: "MissFortune",
-    62: "Wukong",
+    62: "MonkeyKing",
     82: "Mordekaiser",
     25: "Morgana",
     950: "Naafiri",

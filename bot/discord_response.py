@@ -1,6 +1,7 @@
 import discord
 from PIL import Image, ImageDraw, ImageFont
 import aiohttp
+import asyncio
 import io
 from Image_library.images import get_champion_icon, get_item_icon, get_summoner_spell_icon
 from players.player import load_players
@@ -29,9 +30,12 @@ async def create_team_image(team_players):
 
     for player in team_players:
         # Champion icon
-        champ_icon = await fetch_image(get_champion_icon(player.champion_id))
-        champ_icon = champ_icon.resize((CHAMP_SIZE, CHAMP_SIZE))
-        canvas.paste(champ_icon, (10, y_offset), champ_icon)
+        try:
+            champ_icon = await fetch_image(get_champion_icon(player.champion_id))
+            champ_icon = champ_icon.resize((CHAMP_SIZE, CHAMP_SIZE))
+            canvas.paste(champ_icon, (10, y_offset), champ_icon)
+        except Exception as e:
+            print(f"[ERROR] Failed to fetch champion icon for {player.summoner_name}, {get_champion_icon(player.champion_id)}: {e}")
 
         # Player stats text
         stats_text = f"{player.summoner_name} | {player.kills}/{player.deaths}/{player.assists} | CS: {player.cs} | Gold: {player.gold}"
@@ -64,17 +68,23 @@ async def create_team_image(team_players):
 
 async def send_game_to_discord(channel, blue_team, red_team, match_id, winning_team):
     # Generate images
-    blue_image = await create_team_image(blue_team)
-    red_image = await create_team_image(red_team)
+
+    blue_image, red_image = await asyncio.gather(
+        create_team_image(blue_team),
+        create_team_image(red_team)
+    )
+
 
     blue_file = discord.File(blue_image, filename="blue_team.png")
     red_file = discord.File(red_image, filename="red_team.png")
     # Embeds
     match= match_id.split("_")[-1]
-    blue_embed = discord.Embed(title="Blue Team Wins" if winning_team == 100 else "Blue Team Lost", color=0x0000FF, url=f"https://www.leagueofgraphs.com/match/na/{match}")
+    blue_embed = discord.Embed(title="Blue Team Wins" if winning_team == 100 else "Blue Team Lost", color=0x0000FF,
+                                url=f"https://www.leagueofgraphs.com/match/na/{match}" if winning_team == 100 else None)
     blue_embed.set_image(url="attachment://blue_team.png")
 
-    red_embed = discord.Embed(title="Red Team Wins" if winning_team == 200 else "Red Team Lost", color=0x992d22)
+    red_embed = discord.Embed(title="Red Team Wins" if winning_team == 200 else "Red Team Lost", color=0x992d22,
+                               url=f"https://www.leagueofgraphs.com/match/na/{match}" if winning_team == 200 else None)
     red_embed.set_image(url="attachment://red_team.png")
     tracked_players = [player.split('#')[0] for player in load_players("players/players.txt")]
     players_to_print_blue=[]
@@ -89,6 +99,7 @@ async def send_game_to_discord(channel, blue_team, red_team, match_id, winning_t
     #send a message saying who in the tracked list is in the game
     if players_to_print_blue:
         await channel.send("Players in the game on Blue Team: " + ", ".join(players_to_print_blue))
+        await channel.send(files=[blue_file, red_file], embeds=[blue_embed, red_embed])
     if players_to_print_red:
         await channel.send("Players in the game on Red Team: " + ", ".join(players_to_print_red))
-    await channel.send(files=[blue_file, red_file], embeds=[blue_embed, red_embed])
+        await channel.send(files=[blue_file, red_file], embeds=[blue_embed, red_embed])

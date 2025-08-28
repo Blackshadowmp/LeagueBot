@@ -1,9 +1,9 @@
 import aiohttp
 import asyncio
-from .champion_map import champion_id_map
-from .summoner_spell_map import summoner_spell_map
+from Image_library.champion_map import champion_id_map
+from Image_library.summoner_spell_map import summoner_spell_map
 
-fallback_image_url = 'E:/LeagueBot/LeagueBot/Image_library/Missing64x64.jpg'
+fallback_image_url = 'E:/LeagueBot/LeagueBot/Image_library/Missing64x64.png'
 _patch = None
 
 async def refresh_patch():
@@ -18,7 +18,7 @@ async def refresh_patch():
             print(f"[INFO] Refreshed patch: {_patch}")
 
 def get_patch():
-    return _patch or "14.15.1"  # fallback to a recent patch
+    return _patch or "15.16.1"  # fallback to a recent patch
 
 def get_champion_icon(champion_id: int):
     champion_name = champion_id_map.get(champion_id)
