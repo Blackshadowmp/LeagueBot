@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 import aiohttp
-from config import RIOT_API_KEY
+from config import RIOT_API_KEY, MATCH_REGION
 
 player_path = "players/players.txt"
-MATCH_REGION = "americas" 
 
 @dataclass
 class Player:

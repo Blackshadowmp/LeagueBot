@@ -1,14 +1,13 @@
 import asyncio
 from time import sleep
-from config import RIOT_API_KEY, DISCORD_CHANNEL_ID
+from config import RIOT_API_KEY, DISCORD_CHANNEL_ID, MATCH_REGION, RIOT_REGION
 from players.player import load_players, save_players
 import aiohttp
 from scoreboard.player_detail import player_detail
 from scoreboard.team import team
 from bot.discord_response import send_game_to_discord
 
-RIOT_REGION = "na1"  
-MATCH_REGION = "americas"
+
 headers = {"X-Riot-Token": RIOT_API_KEY}
 new_games = []
 

@@ -5,4 +5,7 @@ load_dotenv()
 DISCORD_API_KEY=os.getenv("DISCORD_API_KEY")
 RIOT_API_KEY=os.getenv("RIOT_API_KEY")
 DISCORD_CHANNEL_ID=int(os.getenv("DISCORD_CHANNEL_ID"))  # Replace with your channel's ID
+
 FALLBACK_IMAGE_PATH="/Image_library/Missing64x64.png"
+MATCH_REGION="americas"
+RIOT_REGION="na1"
