@@ -9,11 +9,11 @@ from bot.discord_response import send_game_to_discord
 
 RIOT_REGION = "na1"  
 MATCH_REGION = "americas"
-CHANNEL = DISCORD_CHANNEL_ID
 headers = {"X-Riot-Token": RIOT_API_KEY}
 new_games = []
+
 async def ping_riot_api(bot):
-    players = load_players("players/players.txt") 
+    players = load_players() 
     async with aiohttp.ClientSession() as session:
         for player in players.values():
             puuid = player.puuid
@@ -34,7 +34,7 @@ async def ping_riot_api(bot):
                 print(f"Could not find last match for player {player.riot_id}")
         await get_match_details(session, bot)  
     if new_games:
-        save_players("players/players.txt", players)
+        save_players(players)
         clear_games(new_games)
 
 async def get_puuid(session, riot_id):
@@ -66,22 +66,25 @@ async def get_match_details(session, bot):
                 print(f"[ERROR] Failed to get match details for {match_id} | Status: {resp.status}")
             print_new_game(match_id, await resp.json(), bot)
             await asyncio.sleep(2)
+
 def clear_games(games):
     games.clear()
 
 def print_new_game(match_id, game_data, bot):
-
     winning_team = None
     info = game_data.get('info', {})
     game_mode = info.get('gameMode')
+
     if game_mode == "RUBY" or game_mode == "CHERRY":#Ruby is doom bots, Cherry is Arena
         return
     for team_loop in info.get("teams", []):
         if team_loop.get("win") == True:
             winning_team = team_loop.get("teamId")
+
     participants = info.get('participants', [])
     blue_team = team(100, [])
     red_team = team(200, [])
+
     for player in participants:
         player1 = player_detail(
             champion_id=player.get('championId'),
@@ -103,17 +106,18 @@ def print_new_game(match_id, game_data, bot):
             blue_team.player_list.append(player1)
         else:
             red_team.player_list.append(player1)
+
     blue_team = blue_team.get_organized_team()
     red_team = red_team.get_organized_team()
     blue_team_players = [p for p in blue_team if p]
     red_team_players = [p for p in red_team if p]
 
-    if CHANNEL is not None:
+    if DISCORD_CHANNEL_ID is not None:
         import asyncio
-        channel_obj = bot.get_channel(CHANNEL)
+        channel_obj = bot.get_channel(DISCORD_CHANNEL_ID)
         if channel_obj:
             asyncio.create_task(send_game_to_discord(channel_obj, blue_team_players, red_team_players, match_id, winning_team))
         else:
-            print(f"[ERROR] Could not find Discord channel OBJECT with ID {CHANNEL}")
+            print(f"[ERROR] Could not find Discord channel OBJECT with ID {DISCORD_CHANNEL_ID}")
     else:
-        print(f"[ERROR] Could not find Discord channel with ID {CHANNEL}")
+        print(f"[ERROR] Could not find Discord channel with ID {DISCORD_CHANNEL_ID}")

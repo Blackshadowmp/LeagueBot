@@ -86,7 +86,7 @@ async def send_game_to_discord(channel, blue_team, red_team, match_id, winning_t
     red_embed = discord.Embed(title="Red Team Wins" if winning_team == 200 else "Red Team Lost", color=0x992d22,
                                url=f"https://www.leagueofgraphs.com/match/na/{match}" if winning_team == 200 else None)
     red_embed.set_image(url="attachment://red_team.png")
-    tracked_players = [player.split('#')[0] for player in load_players("players/players.txt")]
+    tracked_players = [player.split('#')[0] for player in load_players()]
     players_to_print_blue=[]
     players_to_print_red=[]
     for player in blue_team: 

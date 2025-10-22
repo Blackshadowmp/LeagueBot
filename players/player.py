@@ -13,9 +13,9 @@ class Player:
     def add_last_game_id(self, game_id: str):
         self.last_game_id = game_id
 
-def load_players(filename):
+def load_players():
     players = {}
-    with open(filename, "r") as f:
+    with open(player_path, "r") as f:
         for line in f:
             parts = line.strip().split()
             if len(parts) == 3: # all Data exist already
@@ -28,14 +28,14 @@ def load_players(filename):
             players[riot_id.lower()] = Player(riot_id=riot_id, puuid=puuid, last_game_id=last_game_id)
     return players
 
-def save_players(filename, players):
-    print(f"Saving {len(players)} players to {filename}")
-    with open(filename, "w") as f:
+def save_players(players: dict[str, Player]):
+    print(f"Saving {len(players)} players to {player_path}")
+    with open(player_path, "w") as f:
         for player in players.values():
             f.write(f"{player.riot_id} {player.puuid} {player.last_game_id}\n")
 
 async def add_player(riot_id: str):
-    players = load_players(player_path)
+    players = load_players()
     player = riot_id.lower()
     if player in players:
         return False
@@ -46,7 +46,7 @@ async def add_player(riot_id: str):
         return False
 
     players[player] = Player(riot_id=riot_id, puuid=puuid)
-    save_players(player_path, players)
+    save_players(players)
     return True
 
 async def fetch_puuid(riot_id: str):
