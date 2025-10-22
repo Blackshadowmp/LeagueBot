@@ -1,9 +1,10 @@
 import aiohttp
 import asyncio
+from config import FALLBACK_IMAGE_PATH
 from Image_library.champion_map import champion_id_map
 from Image_library.summoner_spell_map import summoner_spell_map
 
-fallback_image_url = 'E:/LeagueBot/LeagueBot/Image_library/Missing64x64.png'
+fallback_image_url = FALLBACK_IMAGE_PATH
 _patch = None
 
 async def refresh_patch():
