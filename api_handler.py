@@ -1,6 +1,6 @@
 import asyncio
 from time import sleep
-from config import RIOT_API_KEY, DISCORD_CHANNEL_ID, MATCH_REGION, RIOT_REGION
+from config import RIOT_API_KEY, DISCORD_CHANNEL_ID, MATCH_REGION
 from players.player import load_players, save_players
 import aiohttp
 from scoreboard.player_detail import player_detail
@@ -112,7 +112,6 @@ def print_new_game(match_id, game_data, bot):
     red_team_players = [p for p in red_team if p]
 
     if DISCORD_CHANNEL_ID is not None:
-        import asyncio
         channel_obj = bot.get_channel(DISCORD_CHANNEL_ID)
         if channel_obj:
             asyncio.create_task(send_game_to_discord(channel_obj, blue_team_players, red_team_players, match_id, winning_team))

@@ -8,4 +8,3 @@ DISCORD_CHANNEL_ID=int(os.getenv("DISCORD_CHANNEL_ID"))  # Replace with your cha
 
 FALLBACK_IMAGE_PATH="/Image_library/Missing64x64.png"
 MATCH_REGION="americas"
-RIOT_REGION="na1"
