@@ -8,3 +8,4 @@ DISCORD_CHANNEL_ID=int(os.getenv("DISCORD_CHANNEL_ID"))  # Replace with your cha
 
 FALLBACK_IMAGE_PATH="/Image_library/Missing64x64.png"
 MATCH_REGION="americas"
+GAME_MODES_TO_CHECK=["CLASSIC"]#Ruby is doom bots, Cherry is Arena, Classic is summoners rift

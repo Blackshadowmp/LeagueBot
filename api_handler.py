@@ -1,6 +1,5 @@
 import asyncio
-from time import sleep
-from config import RIOT_API_KEY, DISCORD_CHANNEL_ID, MATCH_REGION
+from config import RIOT_API_KEY, DISCORD_CHANNEL_ID, MATCH_REGION, GAME_MODES_TO_CHECK
 from players.player import load_players, save_players
 import aiohttp
 from scoreboard.player_detail import player_detail
@@ -73,8 +72,7 @@ def print_new_game(match_id, game_data, bot):
     winning_team = None
     info = game_data.get('info', {})
     game_mode = info.get('gameMode')
-
-    if game_mode == "RUBY" or game_mode == "CHERRY":#Ruby is doom bots, Cherry is Arena
+    if game_mode not in GAME_MODES_TO_CHECK:
         return
     for team_loop in info.get("teams", []):
         if team_loop.get("win") == True:
