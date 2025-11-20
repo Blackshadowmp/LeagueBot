@@ -164,6 +164,7 @@ champion_id_map = {
     804: "Yunara",
     350: "Yuumi",
     154: "Zac",
+    904: "Zaahen",
     238: "Zed",
     221: "Zeri",
     115: "Ziggs",
