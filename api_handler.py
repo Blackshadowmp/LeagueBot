@@ -73,6 +73,7 @@ def print_new_game(match_id, game_data, bot):
     info = game_data.get('info', {})
     game_mode = info.get('gameMode')
     if game_mode not in GAME_MODES_TO_CHECK:
+        print(f"Game mode {game_mode} not in monitored modes. Skipping match {match_id}.")
         return
     for team_loop in info.get("teams", []):
         if team_loop.get("win") == True:
